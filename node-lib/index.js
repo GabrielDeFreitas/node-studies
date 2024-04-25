@@ -6,13 +6,10 @@ function handleError(erro) {
 }
 
 function getFile(pathFile) {
-    const enconding = "utf-8"
-    fs.readFile(pathFile, enconding, (erro, text) => {
-        if (erro) {
-            handleError(erro)
-        }
-        console.log(chalk.green(text))
-    })
+    const enconding = 'utf-8'
+    fs.promises
+        .readFile(pathFile, enconding)
+        .then((text) => console.log(chalk.green(text)))
+        .catch(handleError)
 }
 
-getFile('./arquivos/texto.md')
