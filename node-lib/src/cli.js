@@ -1,18 +1,27 @@
 import getFile from './index.js'
 import chalk from 'chalk'
 import fs from 'fs'
+import listValidated from './http-validation.js'
 
 const path = process.argv
 
-function printList(result, identifier = '') {
-    console.log(
-        chalk.yellow('lista de links'),
-        chalk.black.bgGreen(identifier),
-        result)
+async function printList(valid, result, identifier = '') {
+    if (valid) {
+        console.log(
+            chalk.yellow('lista valdadaidada'),
+            chalk.black.bgGreen(identifier),
+            await listValidated(result))
+    } else {
+        console.log(
+            chalk.yellow('lista de links'),
+            chalk.black.bgGreen(identifier),
+            result)
+    }
 }
 
 async function processText(argument) {
     const path = argument[2]
+    const valid = argument[3] === '--valid'
 
     try {
         fs.lstatSync(path)
@@ -25,12 +34,12 @@ async function processText(argument) {
 
     if (fs.lstatSync(path).isFile()) {
         const result = await getFile(argument[2])
-        printList(result)
+        printList(valid, result)
     } else if (fs.lstatSync(path).isDirectory()) {
         const files = await fs.promises.readdir(path)
         files.forEach(async (fileName) => {
             const lista = await getFile(`${path}/${fileName}`)
-            printList(lista, fileName)
+            printList(valid, lista, fileName)
         })
     }
 }
