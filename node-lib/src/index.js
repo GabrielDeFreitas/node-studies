@@ -23,4 +23,4 @@ async function getFile(pathFile) {
     }
 }
 
-getFile('./arquivos/texto.md')
+export default getFile
