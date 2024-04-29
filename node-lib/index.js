@@ -1,32 +1,26 @@
-import fs from "fs"
-import chalk from "chalk"
+import fs from 'fs'
+import chalk from 'chalk'
+
+function extractLinks(text) {
+    const regex = /\[([^[\]]*?)\]\((https?:\/\/[^\s?#.].[^\s]*)\)/gm
+    const catches = [...text.matchAll(regex)]
+    const results = catches.map(cat => ({ [cat[1]]: cat[2] }))
+    return results
+}
 
 function handleError(erro) {
+    console.log(erro)
     throw new Error(chalk.red(erro.code, 'não há arquivo no diretório'))
 }
 
 async function getFile(pathFile) {
     try {
-        const enconding = 'utf-8'
-        const text = await fs.promises.readFile
-            (pathFile, enconding)
-        console.log(chalk.green(text))
+        const encoding = 'utf-8'
+        const text = await fs.promises.readFile(pathFile, encoding)
+        console.log(extractLinks(text))
     } catch (erro) {
         handleError(erro)
     }
 }
 
-/*
-promise com then()
-
-function getFile(pathFile) {
-    const enconding = 'utf-8'
-    fs.promises
-        .readFile(pathFile, enconding)
-        .then((text) => console.log(chalk.green(text)))
-        .catch(handleError)
-}
-*/
-
 getFile('./arquivos/texto.md')
-getFile('./arquivos/')
