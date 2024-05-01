@@ -1,10 +1,15 @@
-import { createServer } from 'node:http'
-import chalk from 'chalk'
+import fastify from "fastify"
 
-const server = createServer((request, response) => {
-    response.write("lorem ipsum lorem ipsum")
+const server = fastify()
 
-    return response.end()
+server.get('/', () => {
+    return 'Lorem ipsum'
 })
 
-server.listen(3333)
+server.get('/node', () => {
+    return 'Node.js'
+})
+
+server.listen({
+    port: 3333
+})
